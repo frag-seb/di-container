@@ -1,0 +1,5 @@
+parameters:
+  paths:
+    - ./src
+  reportUnmatchedIgnoredErrors: false
+  level: 5
