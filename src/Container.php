@@ -22,17 +22,17 @@ use function sprintf;
 final class Container implements ContainerInterface
 {
     /**
-     * @var ServiceBag[]
+     * @var ServiceDefinition[]
      */
-    private $services = [];
+    private $definitions = [];
 
-    public function set(string $id, $service = null, array $parameters = []): ContainerInterface
+    public function add(string $id, $service = null, array $parameters = []): ContainerInterface
     {
-        $parameters = array_map(static function (string $name, $value) {
+        $parameters = array_map(static function (string $name, $value): ParameterBagInterface {
             return new ParameterBag($name, $value);
         }, array_keys($parameters), array_values($parameters));
 
-        $this->services[$id] = new ServiceBag($service ?? $id, ...$parameters);
+        $this->definitions[$id] = new ServiceDefinition($service ?? $id, ...$parameters);
 
         return $this;
     }
@@ -46,7 +46,7 @@ final class Container implements ContainerInterface
             throw new NotFoundException(sprintf('The service with the id `%s` cannot be found', $id));
         }
 
-        $service = $this->services[$id];
+        $service = $this->definitions[$id];
 
         if (!is_callable($service->getService()) && is_object($service->getService())) {
             return $service->getService();
@@ -54,7 +54,7 @@ final class Container implements ContainerInterface
 
         $service->setService($this->resolve($service->getService(), $service->getParameters()));
 
-        return $this->services[$id]->getService();
+        return $this->definitions[$id]->getService();
     }
 
     /**
@@ -62,7 +62,7 @@ final class Container implements ContainerInterface
      */
     public function has($id): bool
     {
-        return isset($this->services[$id]);
+        return isset($this->definitions[$id]);
     }
 
     /**
@@ -125,7 +125,7 @@ final class Container implements ContainerInterface
                 );
             }
 
-            return $this->set($dependency->name)->get($dependency->name);
+            return $this->add($dependency->name)->get($dependency->name);
         }, $parameters);
     }
 }

@@ -7,7 +7,7 @@ namespace FragSeb\Container;
 use Closure;
 use function array_filter;
 
-final class ServiceBag implements ServiceBagInterface
+final class ServiceDefinition implements ServiceBagInterface
 {
     /**
      * @var string|object|Closure

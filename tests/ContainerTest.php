@@ -20,7 +20,7 @@ use Tests\FragSeb\Container\Assets\FooBar;
 
 /**
  * @covers \FragSeb\Container\Container
- * @covers \FragSeb\Container\ServiceBag
+ * @covers \FragSeb\Container\ServiceDefinition
  * @covers \FragSeb\Container\ParameterBag
  */
 final class ContainerTest extends TestCase
@@ -49,7 +49,7 @@ final class ContainerTest extends TestCase
      */
     public function testContainer(string $id, $expected, $service = null, array $parameters = []): void
     {
-        $this->container->set($id, $service, $parameters);
+        $this->container->add($id, $service, $parameters);
 
         /** @var Foo $object1 */
         $object1 = $this->container->get($id);
@@ -146,9 +146,9 @@ final class ContainerTest extends TestCase
 
     public function testContainerWithSeveralServices(): void
     {
-        $this->container->set('app.foo.test', Foo::class);
-        $this->container->set(Foo::class);
-        $this->container->set(Bar::class);
+        $this->container->add('app.foo.test', Foo::class);
+        $this->container->add(Foo::class);
+        $this->container->add(Bar::class);
 
         $object1 = $this->container->get('app.foo.test');
         $object2 = $this->container->get(Foo::class);
@@ -165,7 +165,7 @@ final class ContainerTest extends TestCase
     public function testHas(): void
     {
         self::assertFalse($this->container->has(Foo::class));
-        $this->container->set(Foo::class);
+        $this->container->add(Foo::class);
         self::assertTrue($this->container->has(Foo::class));
     }
 
@@ -174,7 +174,7 @@ final class ContainerTest extends TestCase
         $this->expectException(Exception::class);
         $this->expectExceptionMessage('The class `Tests\FragSeb\Container\Assets\Baz` cannot be initialized');
 
-        $this->container->set(Baz::class);
+        $this->container->add(Baz::class);
 
         $this->container->get(Baz::class);
     }

@@ -16,7 +16,7 @@ interface ContainerInterface extends BaseContainerInterface
     /**
      * @param string|object|Closure|null $service
      */
-    public function set(string $id, $service = null, array $parameters = []): ContainerInterface;
+    public function add(string $id, $service = null, array $parameters = []): ContainerInterface;
 
     /**
      * @param mixed $service
